@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Blocky Koala</title>
+</head>
+<body onload="main()">
+<canvas id="webgl" width="400" height="400">
+  Please use a browser that supports "canvas"
+</canvas>
+<br>
+<label>Global Rotation: <input type="range" id="globalRotSlider" min="-180" max="180" value="0"></label><br>
+<br>
+<b>Arms</b><br>
+<label>L Upper Arm: <input type="range" id="leftUpperArmSlider" min="-90" max="90" value="0"></label><br>
+<label>L Lower Arm: <input type="range" id="leftLowerArmSlider" min="-90" max="90" value="0"></label><br>
+<label>R Upper Arm: <input type="range" id="rightUpperArmSlider" min="-90" max="90" value="0"></label><br>
+<label>R Lower Arm: <input type="range" id="rightLowerArmSlider" min="-90" max="90" value="0"></label><br>
+<br>
+<b>Legs</b><br>
+<label>L Upper Leg: <input type="range" id="leftUpperLegSlider" min="-90" max="90" value="0"></label><br>
+<label>L Lower Leg: <input type="range" id="leftLowerLegSlider" min="-90" max="90" value="0"></label><br>
+<label>R Upper Leg: <input type="range" id="rightUpperLegSlider" min="-90" max="90" value="0"></label><br>
+<label>R Lower Leg: <input type="range" id="rightLowerLegSlider" min="-90" max="90" value="0"></label><br>
+<br>
+<button id="animBtn">Start Animation</button>
+<br>
+<button id="resetBtn">Reset All</button>
+<br>
+<p>Julien Howard | jphoward@ucsc.edu</p>
+<script src="../lib/cuon-matrix.js"></script>
+<script src="../lib/webgl-utils.js"></script>
+<script src="../lib/webgl-debug.js"></script>
+<script src="../lib/cuon-utils.js"></script>
+<script src="asg2.js"></script>
+</body>
+</html>
