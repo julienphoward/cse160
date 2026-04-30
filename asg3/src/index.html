@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <title>Voxel World — Asg 3</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #000; overflow: hidden; }
+    canvas { display: block; width: 100vw; height: 100vh; }
+    #hud {
+      position: fixed; top: 12px; left: 16px;
+      color: #fff; font: 14px/1.6 monospace;
+      text-shadow: 1px 1px 2px #000;
+      pointer-events: none;
+    }
+    #crosshair {
+      position: fixed;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      color: white; font-size: 24px;
+      pointer-events: none;
+      text-shadow: 0 0 3px #000;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="webgl"></canvas>
+
+  <div id="hud">
+    FPS: <span id="fpsCounter">0</span><br>
+    WASD — move &nbsp;|&nbsp; Q/E — turn<br>
+    Mouse — look &nbsp;|&nbsp; Click canvas to lock mouse<br>
+    F — add block &nbsp;|&nbsp; G — delete block<br>
+    Sheep herded: <span id="sheepCounter">0/5</span><br>
+    Herd all sheep into the green pen!
+  </div>
+  <div id="crosshair">+</div>
+  <div id="winMessage" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:rgba(0,0,0,0.8); color:white; font:bold 32px monospace; padding:40px; text-align:center; border-radius:12px;">
+    🐑 All sheep herded! 🐑<br><br>The koala is happy!
+  </div>
+
+  <!-- libs (same relative path as asg2) -->
+  <script src="../lib/cuon-matrix.js"></script>
+  <script src="../lib/webgl-utils.js"></script>
+  <script src="../lib/webgl-debug.js"></script>
+  <script src="../lib/cuon-utils.js"></script>
+
+  <!-- asg3 files -->
+  <script src="camera.js"></script>
+  <script src="cube.js"></script>
+  <script src="asg3.js"></script>
+</body>
+</html>
