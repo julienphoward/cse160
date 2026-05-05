@@ -5,6 +5,8 @@ class Camera {
     this.at  = new Vector3([13, 1.7, 13]);
     this.up    = new Vector3([0, 1, 0]);
     this.speed = 0.15;
+    this.velY = 0;
+    this.onGround = false;
 
     this.viewMatrix       = new Matrix4();
     this.projectionMatrix = new Matrix4();
@@ -46,13 +48,17 @@ class Camera {
 
   moveForward() {
     let [fx, fy, fz] = this._forward();
-    fy = 0;  // lock to ground plane
-    let len = Math.sqrt(fx*fx + fz*fz);  // renormalize without Y
+    fy = 0;
+    let len = Math.sqrt(fx*fx + fz*fz);
     fx /= len; fz /= len;
     let s = this.speed;
-    this.eye.elements[0] += fx*s; this.eye.elements[2] += fz*s;
-    this.at.elements[0]  += fx*s; this.at.elements[2]  += fz*s;
-    this._updateView();
+    let nx = this.eye.elements[0] + fx*s;
+    let nz = this.eye.elements[2] + fz*s;
+    if (!this._isBlocked(nx, nz)) {
+      this.eye.elements[0] = nx; this.eye.elements[2] = nz;
+      this.at.elements[0]  += fx*s; this.at.elements[2] += fz*s;
+      this._updateView();
+    }
   }
 
   moveBackwards() {
@@ -61,27 +67,38 @@ class Camera {
     let len = Math.sqrt(fx*fx + fz*fz);
     fx /= len; fz /= len;
     let s = this.speed;
-    this.eye.elements[0] -= fx*s; this.eye.elements[2] -= fz*s;
-    this.at.elements[0]  -= fx*s; this.at.elements[2]  -= fz*s;
-    this._updateView();
+    let nx = this.eye.elements[0] - fx*s;
+    let nz = this.eye.elements[2] - fz*s;
+    if (!this._isBlocked(nx, nz)) {
+      this.eye.elements[0] = nx; this.eye.elements[2] = nz;
+      this.at.elements[0]  -= fx*s; this.at.elements[2]  -= fz*s;
+      this._updateView();
+    }
   }
 
   moveLeft() {
     let [rx, ry, rz] = this._right();
     let s = this.speed;
-    this.eye.elements[0] -= rx*s; this.eye.elements[1] -= ry*s; this.eye.elements[2] -= rz*s;
-    this.at.elements[0]  -= rx*s; this.at.elements[1]  -= ry*s; this.at.elements[2]  -= rz*s;
-    this._updateView();
+    let nx = this.eye.elements[0] - rx*s;
+    let nz = this.eye.elements[2] - rz*s;
+    if (!this._isBlocked(nx, nz)) {
+      this.eye.elements[0] = nx; this.eye.elements[2] = nz;
+      this.at.elements[0]  -= rx*s; this.at.elements[2]  -= rz*s;
+      this._updateView();
+    }
   }
 
   moveRight() {
     let [rx, ry, rz] = this._right();
     let s = this.speed;
-    this.eye.elements[0] += rx*s; this.eye.elements[1] += ry*s; this.eye.elements[2] += rz*s;
-    this.at.elements[0]  += rx*s; this.at.elements[1]  += ry*s; this.at.elements[2]  += rz*s;
-    this._updateView();
+    let nx = this.eye.elements[0] + rx*s;
+    let nz = this.eye.elements[2] + rz*s;
+    if (!this._isBlocked(nx, nz)) {
+      this.eye.elements[0] = nx; this.eye.elements[2] = nz;
+      this.at.elements[0]  += rx*s; this.at.elements[2]  += rz*s;
+      this._updateView();
+    }
   }
-
   panLeft(alpha) {
     alpha = alpha || 5;
     let [fx, fy, fz] = this._forward();
@@ -115,4 +132,84 @@ class Camera {
       this._updateView();
     }
   }
+  moveDir(fx, fz) {
+    var s = this.speed;
+    var nx = this.eye.elements[0] + fx*s;
+    var nz = this.eye.elements[2] + fz*s;
+    if (!this._isBlocked(nx, nz)) {
+      this.eye.elements[0] = nx; this.eye.elements[2] = nz;
+      this.at.elements[0]  += fx*s; this.at.elements[2] += fz*s;
+      this._updateView();
+    }
+  }
+
+  _isBlocked(x, z) {
+    var pad = 0.35;
+    var mx1 = Math.floor(x - pad);
+    var mx2 = Math.floor(x + pad);
+    var mz1 = Math.floor(z - pad);
+    var mz2 = Math.floor(z + pad);
+    if (mx1 < 0 || mx2 >= 32 || mz1 < 0 || mz2 >= 32) return true;
+
+    var playerY = this.eye.elements[1];
+
+    var blocked = (
+      (g_map[mz1][mx1] > 0 && g_map[mz1][mx1] >= playerY - 1.7 + 0.1) ||
+      (g_map[mz1][mx2] > 0 && g_map[mz1][mx2] >= playerY - 1.7 + 0.1) ||
+      (g_map[mz2][mx1] > 0 && g_map[mz2][mx1] >= playerY - 1.7 + 0.1) ||
+      (g_map[mz2][mx2] > 0 && g_map[mz2][mx2] >= playerY - 1.7 + 0.1)
+    );
+
+    if (blocked) return true;
+
+    // Tree trunks
+    for (var i = 0; i < g_treePositions.length; i++) {
+      var tx = g_treePositions[i][0];
+      var tz = g_treePositions[i][1];
+      if (x + pad > tx && x - pad < tx + 1 &&
+          z + pad > tz && z - pad < tz + 1) return true;
+    }
+    return false;
+  }
+
+  jump() {
+    if (this.onGround) {
+      this.velY = 0.18;
+      this.onGround = false;
+    }
+  }
+
+  applyGravity() {
+    var GRAVITY = -0.012;
+    var GROUND_Y = 1.7;
+
+    this.velY += GRAVITY;
+    var newY = this.eye.elements[1] + this.velY;
+
+    // Check standing on a wall block
+    var mx = Math.floor(this.eye.elements[0]);
+    var mz = Math.floor(this.eye.elements[2]);
+    if (mx >= 0 && mx < 32 && mz >= 0 && mz < 32) {
+      var blockHeight = g_map[mz][mx];
+      var standY = blockHeight + GROUND_Y;
+      if (newY <= standY && this.velY <= 0) {
+        newY = standY;
+        this.velY = 0;
+        this.onGround = true;
+      }
+    }
+
+    // Check flat ground
+    if (newY <= GROUND_Y) {
+      newY = GROUND_Y;
+      this.velY = 0;
+      this.onGround = true;
+    }
+
+    var dy = newY - this.eye.elements[1];
+    this.eye.elements[1] = newY;
+    this.at.elements[1] += dy;
+    this._updateView();
+  }
+
 }
