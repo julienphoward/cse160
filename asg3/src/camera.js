@@ -144,25 +144,25 @@ class Camera {
   }
 
   _isBlocked(x, z) {
-    var pad = 0.35;
+    var pad = 0.3;
     var mx1 = Math.floor(x - pad);
     var mx2 = Math.floor(x + pad);
     var mz1 = Math.floor(z - pad);
     var mz2 = Math.floor(z + pad);
     if (mx1 < 0 || mx2 >= 32 || mz1 < 0 || mz2 >= 32) return true;
 
-    var playerY = this.eye.elements[1];
+    var feetY = this.eye.elements[1] - 1.7;
 
-    var blocked = (
-      (g_map[mz1][mx1] > 0 && g_map[mz1][mx1] >= playerY - 1.7 + 0.1) ||
-      (g_map[mz1][mx2] > 0 && g_map[mz1][mx2] >= playerY - 1.7 + 0.1) ||
-      (g_map[mz2][mx1] > 0 && g_map[mz2][mx1] >= playerY - 1.7 + 0.1) ||
-      (g_map[mz2][mx2] > 0 && g_map[mz2][mx2] >= playerY - 1.7 + 0.1)
-    );
+    var wallBlocks = (mx, mz) => {
+      if (mx < 0 || mx >= 32 || mz < 0 || mz >= 32) return true;
+      var h = g_map[mz][mx];
+      // Only block if wall height is above feet (can't walk through it)
+      return h > 0 && h > feetY + 0.1;
+    };
 
-    if (blocked) return true;
+    if (wallBlocks(mx1,mz1) || wallBlocks(mx1,mz2) ||
+        wallBlocks(mx2,mz1) || wallBlocks(mx2,mz2)) return true;
 
-    // Tree trunks
     for (var i = 0; i < g_treePositions.length; i++) {
       var tx = g_treePositions[i][0];
       var tz = g_treePositions[i][1];

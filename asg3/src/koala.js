@@ -2,6 +2,13 @@
 // KOALA
 // ============================================================
 
+var g_koalaTime = 0;
+var g_koalaX = 15.2;
+var g_koalaZ = 11.0;
+var g_koalaFacing = 0;
+var g_koalaWanderAngle = 0;
+var g_koalaWanderTimer = 120;
+
 function setColor(r, g_, b) {
   gl.uniform4f(u_FragColor, r, g_, b, 1.0);
 }
@@ -66,8 +73,10 @@ function drawKoalaCylinder(M, sides) {
 }
 
 function drawKoala() {
+  g_koalaTime = performance.now() / 1000.0;
   var base = new Matrix4();
-  base.setTranslate(15.2, 1, 13.0);
+  base.setTranslate(g_koalaX, 1, g_koalaZ);
+  base.rotate(g_koalaFacing, 0, 1, 0);
   base.scale(1, 1, 1);
 
   setColor(0.47, 0.47, 0.47);
@@ -134,6 +143,7 @@ function drawKoala() {
   setColor(0.5, 0.5, 0.5);
   var flUpper = new Matrix4(base);
   flUpper.translate(-0.52, -0.25, 0.45);
+  flUpper.rotate(25 * Math.sin(g_koalaTime * 3), 1, 0, 0);  // ADD
   var flUpperBase = new Matrix4(flUpper);
   flUpper.scale(0.22, 0.35, 0.22);
   drawKoalaCube(flUpper);
@@ -155,6 +165,7 @@ function drawKoala() {
   setColor(0.5, 0.5, 0.5);
   var frUpper = new Matrix4(base);
   frUpper.translate(0.3, -0.25, 0.45);
+  frUpper.rotate(-25 * Math.sin(g_koalaTime * 3), 1, 0, 0);  // ADD 
   var frUpperBase = new Matrix4(frUpper);
   frUpper.scale(0.22, 0.35, 0.22);
   drawKoalaCube(frUpper);
@@ -176,6 +187,7 @@ function drawKoala() {
   setColor(0.5, 0.5, 0.5);
   var blUpper = new Matrix4(base);
   blUpper.translate(-0.52, -0.25, -0.55);
+  blUpper.rotate(-25 * Math.sin(g_koalaTime * 3), 1, 0, 0);
   var blUpperBase = new Matrix4(blUpper);
   blUpper.scale(0.22, 0.35, 0.22);
   drawKoalaCube(blUpper);
@@ -197,6 +209,7 @@ function drawKoala() {
   setColor(0.5, 0.5, 0.5);
   var brUpper = new Matrix4(base);
   brUpper.translate(0.3, -0.25, -0.55);
+  brUpper.rotate(25 * Math.sin(g_koalaTime * 3), 1, 0, 0);  // ADD
   var brUpperBase = new Matrix4(brUpper);
   brUpper.scale(0.22, 0.35, 0.22);
   drawKoalaCube(brUpper);
@@ -220,4 +233,24 @@ function drawKoala() {
   belly.translate(-0.28, -0.22, 0.0);
   belly.scale(0.56, 0.4, 0.72);
   drawKoalaCube(belly);
+}
+
+function updateKoala() {
+  g_koalaWanderTimer--;
+  if (g_koalaWanderTimer <= 0) {
+    g_koalaWanderAngle = Math.random() * Math.PI * 2;
+    g_koalaWanderTimer = Math.floor(Math.random() * 200) + 80;
+  }
+  var wx = Math.cos(g_koalaWanderAngle) * 0.008;
+  var wz = Math.sin(g_koalaWanderAngle) * 0.008;
+  var nx = g_koalaX + wx;
+  var nz = g_koalaZ + wz;
+  var mx = Math.floor(nx), mz = Math.floor(nz);
+  if (mx >= 1 && mx < 31 && mz >= 1 && mz < 31 && g_map[mz][mx] === 0) {
+    g_koalaX = nx; g_koalaZ = nz;
+    g_koalaFacing = Math.atan2(wx, wz) * 180 / Math.PI;
+  } else {
+    g_koalaWanderAngle = Math.random() * Math.PI * 2;
+    g_koalaWanderTimer = 30;
+  }
 }
