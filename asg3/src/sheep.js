@@ -100,6 +100,7 @@ function updateSheep() {
   if (herded === 10) {
     g_gameWon = true;
     document.getElementById('winMessage').style.display = 'block';
+    setTimeout(() => { document.getElementById('winMessage').style.display = 'none'; }, 30000);
   }
 }
 

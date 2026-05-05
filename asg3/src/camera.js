@@ -4,7 +4,7 @@ class Camera {
     this.eye = new Vector3([12, 1.7, 13]);
     this.at  = new Vector3([13, 1.7, 13]);
     this.up    = new Vector3([0, 1, 0]);
-    this.speed = 0.15;
+    this.speed = 0.12;
     this.velY = 0;
     this.onGround = false;
 

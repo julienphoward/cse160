@@ -325,6 +325,7 @@ function renderScene() {
   drawKoala();
   drawAllSheep();
   drawAllTrees();
+  if (g_gameWon) drawFlowers();
 }
 
 // ============================================================
@@ -383,6 +384,41 @@ function drawWorld() {
         c.render();
       }
     }
+  }
+}
+
+// drawFlowers
+
+var g_flowerPositions = [
+  [3,3],[7,4],[10,2],[18,3],[25,4],[28,3],
+  [2,10],[6,12],[9,18],[20,15],[27,12],[29,18],
+  [3,22],[8,25],[12,28],[19,26],[24,22],[28,26],
+  [5,8],[15,20],[22,10],[11,15],[17,8],[6,17],
+  [23,18],[4,14],[26,6],[9,28],[21,28],[28,22],
+];
+
+function drawFlowers() {
+  for (var i = 0; i < g_flowerPositions.length; i++) {
+    var fx = g_flowerPositions[i][0];
+    var fz = g_flowerPositions[i][1];
+
+    // Stem
+    setColor(0.2, 0.7, 0.2);
+    var stem = new Matrix4();
+    stem.setTranslate(fx + 0.4, 0, fz + 0.4);
+    stem.scale(0.08, 0.35, 0.08);
+    drawKoalaCube(stem);
+
+    // Flower head — alternate red/yellow
+    var color = i % 4;
+    if (color === 0) setColor(1.0, 0.9, 0.0);
+    else if (color === 1) setColor(1.0, 0.2, 0.2);
+    else if (color === 2) setColor(0.4, 0.4, 1.0);
+    else setColor(0.7, 0.2, 0.9);
+    var head = new Matrix4();
+    head.setTranslate(fx + 0.25, 0.32, fz + 0.25);
+    head.scale(0.35, 0.15, 0.35);
+    drawKoalaCube(head);
   }
 }
 
