@@ -275,35 +275,34 @@ function deleteBlockInFront() {
 // RENDER LOOP
 // ============================================================
 function tick() {
-  // Collect movement direction
+  var now = performance.now();
+  var delta = (now - g_lastFrameTime) / 1000;
+
   var mx = 0, mz = 0;
   if (g_keys['w']) { let [fx,,fz] = g_camera._forward(); mx+=fx; mz+=fz; }
   if (g_keys['s']) { let [fx,,fz] = g_camera._forward(); mx-=fx; mz-=fz; }
   if (g_keys['a']) { let [rx,,rz] = g_camera._right();   mx-=rx; mz-=rz; }
   if (g_keys['d']) { let [rx,,rz] = g_camera._right();   mx+=rx; mz+=rz; }
 
-  // Normalize so diagonal isn't faster
   if (mx !== 0 || mz !== 0) {
     var len = Math.sqrt(mx*mx + mz*mz);
     mx /= len; mz /= len;
-    g_camera.moveDir(mx, mz);
+    var normalizedDelta = delta * 60;
+    g_camera.moveDir(mx, mz, normalizedDelta);
   }
 
   if (g_keys['q']) g_camera.panLeft();
   if (g_keys['e']) g_camera.panRight();
-  
-  var now = performance.now();
-  var delta = now - g_lastFrameTime;
+
   g_lastFrameTime = now;
-  var fps = delta > 0 ? Math.round(1000 / delta) : g_fpsSmooth;
+  var fps = delta > 0 ? Math.round(1 / delta) : g_fpsSmooth;
   g_fpsSmooth = Math.round(g_fpsSmooth * 0.9 + fps * 0.1);
   var el = document.getElementById('fpsCounter');
   if (el) el.textContent = g_fpsSmooth;
-  
-  g_camera.applyGravity();
 
-  updateSheep();
-  updateKoala();
+  g_camera.applyGravity();
+  updateSheep(delta);
+  updateKoala(delta);
   renderScene();
   requestAnimationFrame(tick);
 }

@@ -37,7 +37,7 @@ function initSheep() {
   }
 }
 
-function updateSheep() {
+function updateSheep(delta) {
   if (g_gameWon) return;
   g_sheepTime += 0.1;
   var px = g_camera.eye.elements[0];
@@ -76,8 +76,8 @@ function updateSheep() {
         s.wanderAngle = Math.random() * Math.PI * 2;
         s.wanderTimer = Math.floor(Math.random() * 180) + 60;
       }
-      var wx = Math.cos(s.wanderAngle) * 0.012;
-      var wz = Math.sin(s.wanderAngle) * 0.012;
+      var wx = Math.cos(s.wanderAngle) * 0.012 * delta * 60;
+      var wz = Math.sin(s.wanderAngle) * 0.012 * delta * 60;
       var nx = s.x + wx, nz = s.z + wz;
       var mx = Math.floor(nx), mz = Math.floor(nz);
       if (mx >= 1 && mx < 31 && mz >= 1 && mz < 31 && g_map[mz][mx] === 0) {

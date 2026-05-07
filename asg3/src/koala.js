@@ -235,14 +235,14 @@ function drawKoala() {
   drawKoalaCube(belly);
 }
 
-function updateKoala() {
+function updateKoala(delta) {
   g_koalaWanderTimer--;
   if (g_koalaWanderTimer <= 0) {
     g_koalaWanderAngle = Math.random() * Math.PI * 2;
     g_koalaWanderTimer = Math.floor(Math.random() * 200) + 80;
   }
-  var wx = Math.cos(g_koalaWanderAngle) * 0.008;
-  var wz = Math.sin(g_koalaWanderAngle) * 0.008;
+  var wx = Math.cos(g_koalaWanderAngle) * 0.008 * delta * 60;
+  var wz = Math.sin(g_koalaWanderAngle) * 0.008 * delta * 60;
   var nx = g_koalaX + wx;
   var nz = g_koalaZ + wz;
   var mx = Math.floor(nx), mz = Math.floor(nz);

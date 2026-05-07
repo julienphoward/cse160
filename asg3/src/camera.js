@@ -132,8 +132,8 @@ class Camera {
       this._updateView();
     }
   }
-  moveDir(fx, fz) {
-    var s = this.speed;
+  moveDir(fx, fz, delta) {
+    var s = this.speed * (delta || 1);
     var nx = this.eye.elements[0] + fx*s;
     var nz = this.eye.elements[2] + fz*s;
     if (!this._isBlocked(nx, nz)) {
@@ -142,7 +142,6 @@ class Camera {
       this._updateView();
     }
   }
-
   _isBlocked(x, z) {
     var pad = 0.3;
     var mx1 = Math.floor(x - pad);
