@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <title>Asg 4 Lighting</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #000; overflow: hidden; }
+    canvas { display: block; width: 100vw; height: 100vh; }
+    #hud {
+      position: fixed; top: 12px; left: 16px;
+      color: #fff; font: 14px/1.6 monospace;
+      text-shadow: 1px 1px 2px #000;
+      pointer-events: none;
+    }
+    #crosshair {
+      position: fixed;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      color: white; font-size: 24px;
+      pointer-events: none;
+      text-shadow: 0 0 3px #000;
+    }
+    #controls {
+      position: fixed; top: 12px; right: 16px;
+      display: flex; flex-direction: column; gap: 6px;
+      align-items: flex-end;
+    }
+    #controls button {
+      font: 13px monospace; padding: 5px 10px;
+      background: rgba(0,0,0,0.6); color: #fff;
+      border: 1px solid #aaa; border-radius: 4px; cursor: pointer;
+    }
+    #controls button.active { background: rgba(80,160,80,0.8); border-color: #6f6; }
+    #controls label {
+      color: #fff; font: 12px monospace;
+      display: flex; flex-direction: column; align-items: flex-end; gap: 2px;
+    }
+    #controls input[type=range] { width: 140px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <canvas id="webgl"></canvas>
+
+  <div id="hud">
+    FPS: <span id="fpsCounter">0</span><br>
+    WASD — move &nbsp;|&nbsp; Q/E — turn<br>
+    Mouse — look &nbsp;|&nbsp; Click canvas to lock mouse<br>
+    F — add block &nbsp;|&nbsp; G — delete block &nbsp;|&nbsp; R — select sheep<br>
+    Sheep herded: <span id="sheepCounter">0/10</span>
+    Herd all sheep into the pen for Mr. Koala!
+  </div>
+  <div id="crosshair">+</div>
+  <div id="controls">
+    <button id="btnLighting"   class="active" onclick="toggleLighting()">Lighting: ON</button>
+    <button id="btnPointLight" class="active" onclick="togglePointLight()">Point Light: ON</button>
+    <button id="btnSpotLight"  class="active" onclick="toggleSpotLight()">Spot Light: ON</button>
+    <button id="btnNormals" onclick="toggleNormals()">Normal Vis: OFF</button>
+    <label>Light Angle
+      <input type="range" id="sliderLightAngle" min="0" max="360" value="0"
+        oninput="setLightAngle(+this.value)">
+    </label>
+    <label>Light Color
+      <input type="range" id="sliderLightHue" min="0" max="359" value="0"
+        oninput="setLightHue(+this.value)">
+    </label>
+  </div>
+  <div id="winMessage" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:rgba(0,0,0,0.8); color:white; font:bold 32px monospace; padding:40px; text-align:center; border-radius:12px;">
+    🐑 All sheep herded! 🐑<br><br>Mr. Koala is happy!
+  </div>
+
+  <script src="../lib/cuon-matrix.js"></script>
+  <script src="../lib/webgl-utils.js"></script>
+  <script src="../lib/webgl-debug.js"></script>
+  <script src="../lib/cuon-utils.js"></script>
+  <script src="camera.js"></script>
+  <script src="cube.js"></script>
+  <script src="sphere.js"></script>
+  <script src="koala.js"></script>
+  <script src="sheep.js"></script>
+  <script src="pen.js"></script>
+  <script src="obj_loader.js"></script>
+  <script src="grass.js"></script>
+  <script src="asg4.js"></script>
+  <script src="tree.js"></script>
+</body>
+</html>
