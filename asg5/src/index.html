@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <title>Asg 5 — Three.js World</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #000; overflow: hidden; }
+
+    #overlay {
+      position: fixed; inset: 0;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      background: rgba(0,0,0,0.65);
+      color: #fff; font: 600 28px/1.6 monospace;
+      cursor: pointer; z-index: 10;
+    }
+    #overlay p { font: 14px/2 monospace; color: #ccc; }
+
+    #hud {
+      position: fixed; top: 12px; left: 16px;
+      color: #fff; font: 13px/1.7 monospace;
+      text-shadow: 1px 1px 2px #000;
+      pointer-events: none; z-index: 5;
+    }
+    #winMessage {
+      display: none; position: fixed; top: 50%; left: 50%;
+      transform: translate(-50%,-50%);
+      background: rgba(0,0,0,0.8); color: #fff;
+      font: bold 28px/1.6 monospace; padding: 40px;
+      text-align: center; border-radius: 12px; z-index: 20;
+    }
+    #crosshair {
+      position: fixed; top: 50%; left: 50%;
+      transform: translate(-50%,-50%);
+      color: #fff; font-size: 22px;
+      pointer-events: none; text-shadow: 0 0 3px #000;
+    }
+  </style>
+  <script type="importmap">
+  {
+    "imports": {
+      "three":          "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+      "three/addons/":  "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+    }
+  }
+  </script>
+</head>
+<body>
+  <div id="overlay">
+    Click to Explore
+    <p>WASD — move &nbsp;|&nbsp; Mouse — look &nbsp;|&nbsp; ESC — release</p>
+  </div>
+  <div id="hud">
+    WASD — move &nbsp;|&nbsp; Mouse — look &nbsp;|&nbsp; R — select sheep<br>
+    FPS: <span id="fps">60</span><br>
+    Sheep herded: <span id="sheepCounter">0/25</span><br>
+    ☀ Sun: <input type="range" id="sunSlider" min="0" max="100" value="20"
+            style="width:90px;vertical-align:middle;cursor:pointer;pointer-events:all">
+  </div>
+  <div id="winMessage">All sheep herded!<br><br>Mr. Koala is happy!</div>
+  <div id="crosshair">+</div>
+  <script type="module" src="main.js"></script>
+</body>
+</html>

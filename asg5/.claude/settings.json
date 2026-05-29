@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 -c ' *)",
+      "Bash(python3)",
+      "Read(//home/julien/cse160/**)",
+      "Bash(zip -r Julien_Howard_Assignment_5.zip asg5/ --exclude \"asg5/.git/*\")",
+      "Bash(rm Julien_Howard_Assignment_5.zip)",
+      "Bash(zip -r Julien_Howard_Assignment_5.zip asg5/src/)"
+    ]
+  }
+}

@@ -1,0 +1,7 @@
+# dragon.mtl
+newmtl Dragon
+Ka 0.05 0.20 0.05
+Kd 0.15 0.55 0.20
+Ks 0.30 0.50 0.30
+Ns 32
+illum 2
